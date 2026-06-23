@@ -63,13 +63,15 @@ if uploaded_file:
                 st.write(clean_analysis)
                 
                 # زر التحميل المباشر
+               # بدلاً من الكود السابق، استخدمي هذا الجزء للتحميل
+                pdf_output = pdf.output(dest='S').encode('latin-1')
+                
                 st.download_button(
                     label="📥 Download Professional PDF",
-                    data=pdf.output(dest='S').encode('latin-1'),
+                    data=pdf_output,
                     file_name="Strategic_Report.pdf",
                     mime="application/pdf"
-                )
-                
+                )   
                 # زيادة العداد
                 st.session_state.counter += 1
                 st.info(f"You have used {st.session_state.counter} out of 3 free reports.")

@@ -1,4 +1,13 @@
 import streamlit as st
+
+# إعداد الواجهة لتظهر بشكل احترافي
+st.set_page_config(page_title="AI Business Analyst", page_icon="📈")
+st.title("📈 AI-Powered Business Analyst")
+st.markdown("""
+Welcome to your professional business insights platform. 
+Upload your sales data (CSV) and let the AI extract actionable business strategies for you.
+""")
+import streamlit as st
 import pandas as pd
 import plotly.express as px
 from groq import Groq
@@ -52,5 +61,17 @@ if uploaded_file:
             pdf.multi_cell(0, 10, txt=analysis)
             pdf.output("Business_Report.pdf")
 
-            with open("Business_Report.pdf", "rb") as f:
-                st.download_button("Download Report 📄", data=f, file_name="Report.pdf")
+            with open("Business_Report.pdf", "rb") as f: 
+st.subheader("💡 Need the Full Professional Report?")
+st.write("احصل على التقرير المفصل مع تحليل استراتيجي مخصص لشركتك.")
+
+with st.form("contact_form"):
+    user_email = st.text_input("أدخل بريدك الإلكتروني أو رقم الواتساب:")
+    submit_button = st.form_submit_button("طلب التقرير الاحترافي")
+
+if submit_button:
+    if user_email:
+        st.success(f"تم استلام طلبك بنجاح! سأتواصل معك فوراً عبر {user_email} لإرسال التقرير.")
+        # هنا يمكنك إضافة كود لإرسال إيميل لكِ أو حفظ الطلب في ملف
+    else:
+        st.warning("يرجى إدخال وسيلة تواصل لنتمكن من إرسال التقرير.")

@@ -7,7 +7,6 @@ from fpdf import FPDF
 # إعداد الواجهة
 st.set_page_config(page_title="AI Business Intelligence", layout="wide")
 
-# تصميم الواجهة
 st.title("📊 AI Business Intelligence Dashboard 🚀")
 st.markdown("---")
 
@@ -16,7 +15,6 @@ uploaded_file = st.file_uploader("Upload your sales CSV:", type="csv")
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     
-    # بطاقات الأداء
     col1, col2, col3 = st.columns(3)
     col1.metric("Total Sales", f"${df['Sales'].sum():,}")
     col2.metric("Best Product", df.loc[df['Sales'].idxmax(), 'Product'])
@@ -24,15 +22,15 @@ if uploaded_file:
     
     st.markdown("---")
     
-    # الرسم البياني
     st.write("### 📈 Visual Analytics")
     fig = px.bar(df, x='Product', y='Sales', color='Sales', 
                  color_continuous_scale='Bluered', title="Revenue Distribution")
     st.plotly_chart(fig, use_container_width=True)
 
     if st.button("🚀 Generate Strategic Report"):
-        # ملاحظة: تأكدي من وضع المفتاح هنا بدون فراغات
-        client = Groq(api_key="ضعي_المفتاح_هنا")
+        # تأكدي أن مفتاحك هنا، وتأكدي من عدم وجود أي حرف عربي أو فراغ حول المفتاح
+        client = Groq(api_key="gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        
         prompt = f"Analyze these sales: {df.to_string()}. Provide a high-level strategic business report in professional English."
         
         with st.spinner("Analyzing..."):
@@ -40,10 +38,8 @@ if uploaded_file:
                 messages=[{"role": "user", "content": prompt}],
                 model="llama-3.3-70b-versatile",
             )
-            # استخراج النص
             analysis = response.choices[0].message.content
-            
-            # تنظيف النص ليصبح إنجليزياً فقط (حل مشكلة الـ UnicodeError)
+            # تنظيف النص
             clean_analysis = analysis.encode('ascii', 'ignore').decode('ascii')
             
             st.success("Analysis Complete")
@@ -56,14 +52,12 @@ if uploaded_file:
             pdf.cell(0, 10, txt="Strategic Business Report", ln=True, align='C')
             pdf.ln(10)
             pdf.set_font("Arial", size=12)
-            # استخدام النص النظيف
             pdf.multi_cell(0, 10, txt=clean_analysis)
             pdf.output("Business_Report.pdf")
 
-        # عرض التقرير والنموذج
-        with open("Business_Report.pdf", "rb") as f:
-            st.subheader("💡 Need the Full Professional Report?")
-            st.write("Get the detailed strategic report via email.")
+        # عرض التقرير والنموذج (كل هذا الآن داخل البلوك)
+        st.subheader("💡 Need the Full Professional Report?")
+        st.write("Get the detailed strategic report via email.")
 
         with st.form("contact_form"):
             user_email = st.text_input("Enter your email or WhatsApp number:")

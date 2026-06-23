@@ -1,21 +1,13 @@
 import streamlit as st
-
-# إعداد الواجهة لتظهر بشكل احترافي
-st.set_page_config(page_title="AI Business Analyst", page_icon="📈")
-st.title("📈 AI-Powered Business Analyst")
-st.markdown("""
-Welcome to your professional business insights platform. 
-Upload your sales data (CSV) and let the AI extract actionable business strategies for you.
-""")
-import streamlit as st
 import pandas as pd
 import plotly.express as px
 from groq import Groq
 from fpdf import FPDF
 
+# إعداد الواجهة
 st.set_page_config(page_title="AI Business Intelligence", layout="wide")
 
-# تصميم الواجهة الاحترافية
+# تصميم الواجهة
 st.title("📊 AI Business Intelligence Dashboard 🚀")
 st.markdown("---")
 
@@ -24,7 +16,7 @@ uploaded_file = st.file_uploader("Upload your sales CSV:", type="csv")
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     
-    # بطاقات الأداء (Dashboard Cards)
+    # بطاقات الأداء
     col1, col2, col3 = st.columns(3)
     col1.metric("Total Sales", f"${df['Sales'].sum():,}")
     col2.metric("Best Product", df.loc[df['Sales'].idxmax(), 'Product'])
@@ -32,14 +24,15 @@ if uploaded_file:
     
     st.markdown("---")
     
-    # الرسم البياني المطور
+    # الرسم البياني
     st.write("### 📈 Visual Analytics")
     fig = px.bar(df, x='Product', y='Sales', color='Sales', 
                  color_continuous_scale='Bluered', title="Revenue Distribution")
     st.plotly_chart(fig, use_container_width=True)
 
     if st.button("🚀 Generate Strategic Report"):
-        client = Groq(api_key="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")
+        # ضعي مفتاح الـ API الخاص بك هنا أو استخدمي st.secrets
+        client = Groq(api_key="ضعي_المفتاح_هنا")
         prompt = f"Analyze these sales: {df.to_string()}. Provide a high-level strategic business report in professional English."
         
         with st.spinner("Analyzing..."):
@@ -51,7 +44,7 @@ if uploaded_file:
             st.success("Analysis Complete")
             st.write(analysis)
 
-            # إنشاء الـ PDF الاحترافي
+            # إنشاء الـ PDF
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", 'B', 20)
@@ -61,17 +54,17 @@ if uploaded_file:
             pdf.multi_cell(0, 10, txt=analysis)
             pdf.output("Business_Report.pdf")
 
-            with open("Business_Report.pdf", "rb") as f: 
-st.subheader("💡 Need the Full Professional Report?")
-st.write("احصل على التقرير المفصل مع تحليل استراتيجي مخصص لشركتك.")
+        # الجزء المصحح للمسافات (Indentation Fixed)
+        with open("Business_Report.pdf", "rb") as f:
+            st.subheader("💡 Need the Full Professional Report?")
+            st.write("احصل على التقرير المفصل مع تحليل استراتيجي مخصص لشركتك.")
 
-with st.form("contact_form"):
-    user_email = st.text_input("أدخل بريدك الإلكتروني أو رقم الواتساب:")
-    submit_button = st.form_submit_button("طلب التقرير الاحترافي")
+        with st.form("contact_form"):
+            user_email = st.text_input("أدخل بريدك الإلكتروني أو رقم الواتساب:")
+            submit_button = st.form_submit_button("طلب التقرير الاحترافي")
 
-if submit_button:
-    if user_email:
-        st.success(f"تم استلام طلبك بنجاح! سأتواصل معك فوراً عبر {user_email} لإرسال التقرير.")
-        # هنا يمكنك إضافة كود لإرسال إيميل لكِ أو حفظ الطلب في ملف
-    else:
-        st.warning("يرجى إدخال وسيلة تواصل لنتمكن من إرسال التقرير.")
+        if submit_button:
+            if user_email:
+                st.success(f"تم استلام طلبك بنجاح! سأتواصل معك فوراً عبر {user_email}")
+            else:
+                st.warning("يرجى إدخال وسيلة تواصل لنتمكن من إرسال التقرير")

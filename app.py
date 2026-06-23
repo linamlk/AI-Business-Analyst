@@ -28,9 +28,10 @@ if uploaded_file:
     st.plotly_chart(fig, use_container_width=True)
 
     if st.button("🚀 Generate Strategic Report"):
-        # تأكدي أن مفتاحك هنا، وتأكدي من عدم وجود أي حرف عربي أو فراغ حول المفتاح
-        client = Groq(api_key="gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        # تأكدي من وضع مفتاح الـ API الخاص بك هنا بدون أي مسافات أو أحرف عربية
+        client = Groq(api_key="YOUR_GROQ_API_KEY_HERE")
         
+        # تنظيف الـ prompt ليحتوي على إنجليزية فقط
         prompt = f"Analyze these sales: {df.to_string()}. Provide a high-level strategic business report in professional English."
         
         with st.spinner("Analyzing..."):
@@ -39,13 +40,14 @@ if uploaded_file:
                 model="llama-3.3-70b-versatile",
             )
             analysis = response.choices[0].message.content
-            # تنظيف النص
+            
+            # تنظيف النص الناتج ليصبح إنجليزياً فقط
             clean_analysis = analysis.encode('ascii', 'ignore').decode('ascii')
             
             st.success("Analysis Complete")
             st.write(clean_analysis)
 
-            # إنشاء الـ PDF
+            # إنشاء الـ PDF باستخدام النص النظيف
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", 'B', 20)
@@ -55,7 +57,7 @@ if uploaded_file:
             pdf.multi_cell(0, 10, txt=clean_analysis)
             pdf.output("Business_Report.pdf")
 
-        # عرض التقرير والنموذج (كل هذا الآن داخل البلوك)
+        # عرض التقرير والنموذج
         st.subheader("💡 Need the Full Professional Report?")
         st.write("Get the detailed strategic report via email.")
 

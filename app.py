@@ -37,7 +37,7 @@ if uploaded_file:
     if st.button("🚀 Generate Strategic Report"):
         if st.session_state.counter < 3:
             try:
-                # Initialize Client
+                # Initialize Client (Put your key here)
                 client = Groq(api_key="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")
                 
                 # Prepare Prompt
@@ -49,6 +49,7 @@ if uploaded_file:
                         model="llama-3.3-70b-versatile",
                     )
                     analysis = response.choices[0].message.content
+                    # Clean text to avoid Unicode errors
                     clean_analysis = analysis.encode('ascii', 'ignore').decode('ascii')
                     
                     # Create PDF
@@ -60,6 +61,8 @@ if uploaded_file:
                     pdf.set_font("Arial", size=12)
                     pdf.multi_cell(0, 10, txt=clean_analysis)
                     
+                    pdf_bytes = pdf.output(dest='S')
+                    
                     # Display Result
                     st.success("Analysis Complete!")
                     st.write(clean_analysis)
@@ -67,7 +70,7 @@ if uploaded_file:
                     # Download Button
                     st.download_button(
                         label="📥 Download Professional PDF",
-                        data=pdf.output(dest='S').encode('latin-1'),
+                        data=pdf_bytes,
                         file_name="Strategic_Report.pdf",
                         mime="application/pdf"
                     )
@@ -84,4 +87,4 @@ if uploaded_file:
 
 # Footer
 st.markdown("---")
-st.caption("Powered by LINA AI Business Intelligence © 2026")
+st.caption("Powered by LINA AI Business Intelligence")

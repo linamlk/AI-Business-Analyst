@@ -27,7 +27,7 @@ if uploaded_file:
     st.plotly_chart(fig, use_container_width=True)
 
     if st.button("🚀 Generate Strategic Report"):
-        client = Groq(api_key="YOUR_GROQ_API_KEY_HERE")
+        client = Groq(api_key="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")
         
         prompt = f"Analyze these sales: {df.to_string()}. Provide a high-level strategic business report in professional English."
         

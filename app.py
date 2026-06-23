@@ -31,7 +31,7 @@ if uploaded_file:
     st.plotly_chart(fig, use_container_width=True)
 
     if st.button("🚀 Generate Strategic Report"):
-        # ضعي مفتاح الـ API الخاص بك هنا أو استخدمي st.secrets
+        # ملاحظة: تأكدي من وضع المفتاح هنا بدون فراغات
         client = Groq(api_key="ضعي_المفتاح_هنا")
         prompt = f"Analyze these sales: {df.to_string()}. Provide a high-level strategic business report in professional English."
         
@@ -40,9 +40,14 @@ if uploaded_file:
                 messages=[{"role": "user", "content": prompt}],
                 model="llama-3.3-70b-versatile",
             )
+            # استخراج النص
             analysis = response.choices[0].message.content
+            
+            # تنظيف النص ليصبح إنجليزياً فقط (حل مشكلة الـ UnicodeError)
+            clean_analysis = analysis.encode('ascii', 'ignore').decode('ascii')
+            
             st.success("Analysis Complete")
-            st.write(analysis)
+            st.write(clean_analysis)
 
             # إنشاء الـ PDF
             pdf = FPDF()
@@ -51,20 +56,21 @@ if uploaded_file:
             pdf.cell(0, 10, txt="Strategic Business Report", ln=True, align='C')
             pdf.ln(10)
             pdf.set_font("Arial", size=12)
-            pdf.multi_cell(0, 10, txt=analysis)
+            # استخدام النص النظيف
+            pdf.multi_cell(0, 10, txt=clean_analysis)
             pdf.output("Business_Report.pdf")
 
-        # الجزء المصحح للمسافات (Indentation Fixed)
+        # عرض التقرير والنموذج
         with open("Business_Report.pdf", "rb") as f:
             st.subheader("💡 Need the Full Professional Report?")
-            st.write("احصل على التقرير المفصل مع تحليل استراتيجي مخصص لشركتك.")
+            st.write("Get the detailed strategic report via email.")
 
         with st.form("contact_form"):
-            user_email = st.text_input("أدخل بريدك الإلكتروني أو رقم الواتساب:")
-            submit_button = st.form_submit_button("طلب التقرير الاحترافي")
+            user_email = st.text_input("Enter your email or WhatsApp number:")
+            submit_button = st.form_submit_button("Request Professional Report")
 
         if submit_button:
             if user_email:
-                st.success(f"تم استلام طلبك بنجاح! سأتواصل معك فوراً عبر {user_email}")
+                st.success(f"Request received successfully! We will contact you at {user_email}")
             else:
-                st.warning("يرجى إدخال وسيلة تواصل لنتمكن من إرسال التقرير")
+                st.warning("Please enter your contact details.")
